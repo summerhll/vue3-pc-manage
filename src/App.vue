@@ -1,18 +1,81 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <h1>{{ count }}</h1>
+    <h1>{{ double }}</h1>
+   
+    <button @click="increase">+1</button>
+    <h1>X: {{ x }}</h1>
+    <h1>Y: {{ y }}</h1>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
+
+
+<script  lang="ts">
+import { ref, computed, reactive, toRefs , onMounted, onUnmounted} from "vue";
+import useMousePosition from "./hooks/useMousePosition";
+interface DataProps {
+  count: number;
+  double: number;
+  increase: () => void;
+}
+export default {
+  setup() {
+    // const count = ref(0);
+    // const double = computed(()=>{
+    //   return count.value * 2;
+
+    // })
+    // const increase = () =>{
+    //   count.value++;
+    // }
+
+    const data: DataProps = reactive({
+      count: 0,
+      increase: () => { data.count++ },
+      double: computed(() => data.count * 2)
+    });
+
+
+    const refData = toRefs(data);
+
+    // const x = ref(0);
+    // const y = ref(0);
+    // const updateMouse = (e: MouseEvent) => {
+    //   x.value = e.pageX;
+    //   y.value = e.pageY;
+
+    // }
+
+    // onMounted(() => {
+    //   document.addEventListener("click", updateMouse);
+      
+    // })
+    // onUnmounted(() => {
+    //   document.removeEventListener("click", updateMouse);
+      
+    // })
+ 
+    const {x, y} =  useMousePosition();
+    return {
+      // count,
+      // double,
+      // increase
+
+      ...refData,
+      x,
+      y,
+      // updateMouse
+
+
+    }
+
+  }
+
+}
+
+
+</script>
 
 <style scoped>
 .logo {
@@ -20,9 +83,11 @@ import HelloWorld from './components/HelloWorld.vue'
   padding: 1.5em;
   will-change: filter;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
